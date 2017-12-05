@@ -32,13 +32,23 @@ def load_orders(db, f, now, load_chunk_size=1):
     # Chunks allow the
     reader = csv.DictReader(f, delimiter=',')
     for chunk in ichunk(reader, load_chunk_size):
+        chunk = [{key: None if val == NA else val for key, val in row.items()}
+                 for row in chunk]
         c.executemany("""
-            insert into orders 
+            insert into orders
                    (customer_id, order_id, order_item_id, num_items, revenue, created_at_date, created_julian)
             values (          ?,        ?,             ?,         ?,       ?,               ?, julianday(?)  )
         """, [
-            [row['customer_id'], row['order_id'], row['order_item_id'], row['num_items'], row['revenue'], row['created_at_date'], row['created_at_date']]
-            for row in ({key: None if val == NA else val for key, val in row.items()} for row in chunk)
+            [
+                row['customer_id'],
+                row['order_id'],
+                row['order_item_id'],
+                row['num_items'],
+                row['revenue'],
+                row['created_at_date'],
+                row['created_at_date'],
+            ]
+            for row in chunk
         ])
 
     # Indexes help us to aggregate (group-by/order-by/select/join) faster.

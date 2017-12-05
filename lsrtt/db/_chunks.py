@@ -11,4 +11,3 @@ def ichunk(src, n):
             chunk = []
     if chunk:
         yield chunk
-

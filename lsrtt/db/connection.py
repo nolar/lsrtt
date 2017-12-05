@@ -37,4 +37,3 @@ class _row(list):
             raise AttributeError("The row does not have {!r} field.".format(name))
         else:
             return self[idx]
-

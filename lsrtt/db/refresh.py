@@ -9,6 +9,7 @@ def refresh_db(db, now):
     c.execute("""
         update customers_agg
         set days_since_last_order = julianday(?) - last_order_day,
-            longest_interval_now = ifnull(longest_interval, (select avg_interval from interval_avg) + (julianday(?) - last_order_day))
+            longest_interval_now = ifnull(longest_interval,
+                (select avg_interval from interval_avg) + (julianday(?) - last_order_day))
         ;
     """, [now, now])

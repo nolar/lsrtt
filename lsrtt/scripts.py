@@ -43,6 +43,7 @@ def load(filename, encoding, db_path, now, load_chunk_size):
         with open(filename, 'rt', encoding=encoding) as f:
             load_orders(db, f, now=now, load_chunk_size=load_chunk_size)
 
+
 @lsrtt.command()
 @click.option('--db-path', default=DEFAULT_DB_PATH)
 @click.option('--dump-chunk-size', default=DEFAULT_DUMP_CHUNK_SIZE)
