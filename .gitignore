@@ -1,6 +1,7 @@
 db.sqlite
 orders.csv
 model.dill
+predictions.csv
 /.idea/
 /*.egg-info
 *.pyc

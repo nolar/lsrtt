@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 import click
 
-from ._defaults import DEFAULT_DB_PATH, DEFAULT_MODEL_PATH, DEFAULT_PREDICT_CHUNK_SIZE
+from ._defaults import DEFAULT_DB_PATH, DEFAULT_MODEL_PATH, DEFAULT_RESULTS_PATH, DEFAULT_PREDICT_CHUNK_SIZE
 from ..db.connection import connect_db
 from ..db.predict import predict_db
 
