@@ -2,8 +2,8 @@ import pkg_resources
 from flask import Flask, current_app
 from flask_restful import Resource, Api, abort
 
+from lsrtt._defaults import DEFAULT_DB_PATH
 from lsrtt.db.connection import connect_db
-from lsrtt.scripts._defaults import DEFAULT_DB_PATH
 
 app = Flask(__name__)
 api = Api(app, prefix='/api')
