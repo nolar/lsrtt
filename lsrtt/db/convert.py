@@ -98,8 +98,11 @@ def convert_to_db(db, f, now, convert_chunk_size=1):
                count(*) as num_orders,
                max(o.created_julian) as last_order_day,
                max(a2.days_till_next_order) as longest_interval,
+               /* values are here only to hint the type; normally, the table creation should be done aside */
                0 as days_since_last_order,
-               0 as longest_interval_now
+               0 as longest_interval_now,
+               date('1900-01-01') as predicted_date,
+               0.0 as predicted_clv
         from orders o
         left join orders_agg1 a1 on (a1.customer_id = o.customer_id and a1.order_id = o.order_id)
         left join orders_agg2 a2 on (a2.customer_id = o.customer_id and a2.order_id = o.order_id)

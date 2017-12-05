@@ -27,6 +27,7 @@ setup(
         'console_scripts': [
             'convert = lsrtt.scripts.convert:convert',
             'refresh = lsrtt.scripts.refresh:refresh',
+            'predict = lsrtt.scripts.predict:predict',
         ],
     }
 )
