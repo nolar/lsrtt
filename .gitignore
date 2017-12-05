@@ -1,0 +1,7 @@
+db.sqlite
+orders.csv
+model.dill
+/.idea/
+/*.egg-info
+*.pyc
+__pycache__
