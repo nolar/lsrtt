@@ -15,6 +15,10 @@ The typical worfklow for the manual prediction::
     lsrtt predict   # ~5s
     lsrtt dump      # ~2s
 
+By default (without the command line options & arguments),
+the data are loaded from ``./orders.csv`` (must be put into the local directory),
+and dumped into ``./predictions.csv``.
+
 For a regular service deployment, put the automatic data re-calculations into the scheduler/crontab::
 
     lsrtt refresh && lsrtt predict
