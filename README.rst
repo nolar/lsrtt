@@ -37,3 +37,8 @@ To work on the source code locally with all the convenient tools::
     pip install -e .[dev]
 
 This will also install the abovementioned umbrella script into the virtualenv's bin folder.
+
+To run the tests:
+
+    pip install -e .[test]
+    pytest
