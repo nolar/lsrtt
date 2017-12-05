@@ -10,13 +10,17 @@ setup(
     url='http://github.com/nolar/lsrtt/',
 
     packages=find_packages(),
-    include_package_data=True,
+    include_package_data=True,  # MANIFEST.in
+    package_data={
+        '': ['introduction.*']
+    },
 
     install_requires=[
         'dill',
         'numpy',
         'click',
         'flask',
+        'flask-restful',
     ],
     extras_require={
         'dev': ['pdbpp', 'ipython'],
@@ -29,6 +33,7 @@ setup(
             'refresh = lsrtt.scripts.refresh:refresh',
             'predict = lsrtt.scripts.predict:predict',
             'exports = lsrtt.scripts.export:export',
+            'web = lsrtt.scripts.web:web',
         ],
     }
 )
