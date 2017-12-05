@@ -1,5 +1,7 @@
 from __future__ import absolute_import
 
+import warnings
+
 import dill
 import numpy
 
@@ -45,7 +47,7 @@ def predict_db(db, model_path, predict_chunk_size=1):
             arr = numpy.array([row[1:] for row in rows])
             res = model.predict(arr)
         except Exception as e:
-            pass
+            warnings.warn("Error while calculating the predicitons.", category=RuntimeWarning)
         else:
             # Store the predicted values and some logging info.
             c2 = db.cursor()
