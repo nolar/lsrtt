@@ -6,15 +6,16 @@ from flask import current_app
 from ._defaults import (
     DEFAULT_NOW,
     DEFAULT_DB_PATH,
+    DEFAULT_LOAD_PATH,
+    DEFAULT_DUMP_PATH,
     DEFAULT_MODEL_PATH,
-    DEFAULT_RESULTS_PATH,
+    DEFAULT_LOAD_CHUNK_SIZE,
+    DEFAULT_DUMP_CHUNK_SIZE,
     DEFAULT_PREDICT_CHUNK_SIZE,
-    DEFAULT_CONVERT_CHUNK_SIZE,
-    DEFAULT_EXPORT_CHUNK_SIZE,
 )
 from .db.connection import connect_db
-from .db.convert import convert_to_db
-from .db.exports import export_predictions
+from .db.load import load_orders
+from .db.dump import dump_predictions
 from .db.predict import predict_db
 from .db.refresh import refresh_db
 from .web.app import app
@@ -30,36 +31,38 @@ def lsrtt():
 
 @lsrtt.command()
 @click.option('--db-path', default=DEFAULT_DB_PATH)
-@click.option('--convert-chunk-size', default=DEFAULT_CONVERT_CHUNK_SIZE, type=int)
+@click.option('--load-chunk-size', default=DEFAULT_LOAD_CHUNK_SIZE, type=int)
 @click.option('--now', default=DEFAULT_NOW)
 @click.option('--encoding', default='utf-8')
-@click.argument('filename', default='orders.csv')
-def convert(filename, encoding, db_path, now, convert_chunk_size):
+@click.argument('filename', default=DEFAULT_LOAD_PATH)
+def load(filename, encoding, db_path, now, load_chunk_size):
     """
     Import the data from the source CSV file into the database.
     """
     with connect_db(db_path) as db:
         with open(filename, 'rt', encoding=encoding) as f:
-            convert_to_db(db, f, now=now, convert_chunk_size=convert_chunk_size)
+            load_orders(db, f, now=now, load_chunk_size=load_chunk_size)
 
 @lsrtt.command()
 @click.option('--db-path', default=DEFAULT_DB_PATH)
-@click.option('--export-chunk-size', default=DEFAULT_EXPORT_CHUNK_SIZE)
-@click.option('--model', default=DEFAULT_MODEL_PATH)
-@click.argument('filename', default=DEFAULT_RESULTS_PATH)
-def export(db_path, model, export_chunk_size, filename):
+@click.option('--dump-chunk-size', default=DEFAULT_DUMP_CHUNK_SIZE)
+@click.argument('filename', default=DEFAULT_DUMP_PATH)
+def dump(db_path, dump_chunk_size, filename):
     """
     Export the predictions from the database into the CSV file.
     """
     with connect_db(db_path) as db:
         with open(filename, 'wt', encoding='utf-8') as f:
-            export_predictions(db, f, export_chunk_size=export_chunk_size)
+            dump_predictions(db, f, export_chunk_size=dump_chunk_size)
 
 
 @lsrtt.command()
 @click.option('--db-path', default=DEFAULT_DB_PATH)
 @click.option('--now', default=DEFAULT_NOW)
-def refresh(db_path, now):
+@click.option('--predict/--no-predict', default=False)
+@click.option('--predict-chunk-size', default=DEFAULT_PREDICT_CHUNK_SIZE)
+@click.option('--model', default=DEFAULT_MODEL_PATH)
+def refresh(db_path, now, predict, predict_chunk_size, model):
     """
     Refresh the calculated fields that depend on the current date.
 
@@ -71,13 +74,17 @@ def refresh(db_path, now):
     """
     with connect_db(db_path) as db:
         refresh_db(db, now)
+        if predict:
+            predict_db(db, model, predict_chunk_size=predict_chunk_size)
 
 
 @lsrtt.command()
 @click.option('--db-path', default=DEFAULT_DB_PATH)
 @click.option('--predict-chunk-size', default=DEFAULT_PREDICT_CHUNK_SIZE)
 @click.option('--model', default=DEFAULT_MODEL_PATH)
-def predict(db_path, model, predict_chunk_size):
+@click.option('--refresh/--no-refresh', default=False)
+@click.option('--now', default=DEFAULT_NOW)
+def predict(db_path, model, predict_chunk_size, refresh, now):
     """
     Calculate the predicted CLV.
 
@@ -88,6 +95,8 @@ def predict(db_path, model, predict_chunk_size):
     This this done to give you better control on the DB maintenance steps.
     """
     with connect_db(db_path) as db:
+        if refresh:
+            refresh_db(db, now)
         predict_db(db, model, predict_chunk_size=predict_chunk_size)
 
 

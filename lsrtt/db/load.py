@@ -8,7 +8,7 @@ from .refresh import refresh_db
 NA = 'NA'
 
 
-def convert_to_db(db, f, now, convert_chunk_size=1):
+def load_orders(db, f, now, load_chunk_size=1):
     """ Convert the source CSV file object into an indexed and pre-aggregated database. """
 
     c = db.cursor()
@@ -31,7 +31,7 @@ def convert_to_db(db, f, now, convert_chunk_size=1):
     # Transfer all data to the db as is. But cast the anonymized data to nulls (more convenient for us).
     # Chunks allow the
     reader = csv.DictReader(f, delimiter=',')
-    for chunk in ichunk(reader, convert_chunk_size):
+    for chunk in ichunk(reader, load_chunk_size):
         c.executemany("""
             insert into orders 
                    (customer_id, order_id, order_item_id, num_items, revenue, created_at_date, created_julian)
