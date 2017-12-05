@@ -2,23 +2,31 @@
 LSRTT
 =====
 
-LSRTT is...
+LSRTT is a sample ML app.
 
+Brief intro::
 
-Data import
-===========
+    pip install .
+    lsrtt --help
 
-For the data storage, we use the sqlite3 database.
-The database is by default located in the current working directory (can be configure with CLI options).
+The typical worfklow for the manual prediction::
 
-To import the data::
+    lsrtt load      # ~20s
+    lsrtt predict   # ~5s
+    lsrtt dump      # ~2s
 
-    convert orders.csv
+For a regular service deployment, put the automatic data re-calculations into the scheduler/crontab::
 
-To regularly refresh the fields that depend on the value of "now" (i.e. the current date),
-execute once and/or put to the crontab or other scheduled job executor::
+    lsrtt refresh && lsrttpredict
 
-    refresh
+To run a sample API web server::
+
+    lsrtt web
+
+The visit http://localhost:5000/ for more details. The supported API endpoints::
+
+    curl http://localhost:5000/api/customers
+    curl http://localhost:5000/api/customers/fffd7075b2a9034bf02202bf6cb5c63e/predictions
 
 
 Development
@@ -28,4 +36,4 @@ To work on the source code locally with all the convenient tools::
 
     pip install -e .[dev]
 
-This will also install the abovementioned scripts into the virtualenv's bin folder.
+This will also install the abovementioned umbrella script into the virtualenv's bin folder.
