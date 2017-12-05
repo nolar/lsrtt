@@ -30,9 +30,9 @@ def test_full_cycle(db, dbloader, model):
     from lsrtt.db.load import load_orders
     load_orders(db, f, now='2017-10-17')
 
-    orders = dbloader('orders')
-    orders_agg1 = dbloader('orders_agg1')
-    orders_agg2 = dbloader('orders_agg2')
+    orders = dbloader(db, 'orders')
+    orders_agg1 = dbloader(db, 'orders_agg1')
+    orders_agg2 = dbloader(db, 'orders_agg2')
     orders_pks = {tuple(row[0:2]) for row in orders}
     orders_agg1_pks = {tuple(row[0:2]) for row in orders_agg1}
     orders_agg2_pks = {tuple(row[0:2]) for row in orders_agg2}
@@ -44,7 +44,7 @@ def test_full_cycle(db, dbloader, model):
     assert orders_pks == orders_agg2_pks
     assert len([True for row in orders if row.customer_id == CUSTOMER_ID]) == 2
 
-    customers = dbloader('customers_agg')
+    customers = dbloader(db, 'customers_agg')
     customer = [row for row in customers if row.customer_id == CUSTOMER_ID]
     assert len(customers) == 10
     assert len(customer) == 1
@@ -56,7 +56,7 @@ def test_full_cycle(db, dbloader, model):
     from lsrtt.db.predict import predict_db
     predict_db(db, model)
 
-    customers = dbloader('customers_agg')
+    customers = dbloader(db, 'customers_agg')
     customer = [row for row in customers if row.customer_id == CUSTOMER_ID]
     assert len(customers) == 10
     assert len(customer) == 1

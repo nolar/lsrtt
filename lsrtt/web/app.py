@@ -10,6 +10,11 @@ api = Api(app, prefix='/api')
 
 
 def get_db():
+    # Used in testing for in-memory db instances. We do not care about threads here.
+    db = getattr(current_app, '_database', None)
+    if db is not None:
+        return db
+
     # NB: sqlite3 objects are limited to the thread where they were created.
     # Thus, a connection per request. The path is set by `web.py` CLI (optionally).
     return connect_db(getattr(current_app, '_database_path', DEFAULT_DB_PATH))
