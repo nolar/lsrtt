@@ -26,7 +26,7 @@ class Customers(Resource):
             c = db.cursor()
             c.execute(""" select * from customers_agg """)
             result = [
-                row['customer_id'] for row in c.fetchall()
+                row.customer_id for row in c.fetchall()
             ]
             return result
 
@@ -41,8 +41,8 @@ class Predictions(Resource):
                 abort(404, message="Customer {} doesn't exist.".format(customer_id))
             else:
                 return {
-                    'customer_id': rows[0]['customer_id'],
-                    'predicted_clv': rows[0]['predicted_clv'],
+                    'customer_id': rows[0].customer_id,
+                    'predicted_clv': rows[0].predicted_clv,
                 }
 
 

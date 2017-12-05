@@ -41,7 +41,7 @@ def predict_db(db, model_path, predict_chunk_size=1):
     while rows:
         try:
             # Call the prediction model. Keep in mind, that it can fail for multiple reasons.
-            ids = [row[0] for row in rows]
+            ids = [row.customer_id for row in rows]
             arr = numpy.array([row[1:] for row in rows])
             res = model.predict(arr)
         except Exception as e:

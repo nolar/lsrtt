@@ -21,6 +21,9 @@ def dump_predictions(db, f, export_chunk_size=100):
     rows = c.fetchmany(export_chunk_size)
     while rows:
         try:
-            writer.writerows(rows)
+            writer.writerows([
+                {'customer_id': row.customer_id, 'predicted_clv': row.predicted_clv}
+                for row in rows
+            ])
         finally:
             rows = c.fetchmany(export_chunk_size)
