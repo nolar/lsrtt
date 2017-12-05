@@ -17,7 +17,7 @@ The typical worfklow for the manual prediction::
 
 For a regular service deployment, put the automatic data re-calculations into the scheduler/crontab::
 
-    lsrtt refresh && lsrttpredict
+    lsrtt refresh && lsrtt predict
 
 To run a sample API web server::
 
@@ -38,7 +38,7 @@ To work on the source code locally with all the convenient tools::
 
 This will also install the abovementioned umbrella script into the virtualenv's bin folder.
 
-To run the tests:
+To run the tests::
 
     pip install -e .[test]
     pytest
