@@ -20,6 +20,7 @@ setup(
     ],
     extras_require={
         'dev': ['pdbpp', 'ipython'],
+        'test': ['pytest'],
     },
 
     entry_points={

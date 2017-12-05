@@ -2,21 +2,10 @@ from __future__ import absolute_import
 
 import csv
 
+from ._chunks import ichunk
 from .refresh import refresh_db
 
 NA = 'NA'
-
-
-def ichunk(src, n):
-    """ Iterate over the source, and yield chunks of values of size N. """
-    chunk = []
-    for idx, val in enumerate(src, 1):
-        chunk.append(val)
-        if idx % n == 0:
-            yield chunk
-            chunk = []
-    if chunk:
-        yield chunk
 
 
 def convert_to_db(db, f, now, convert_chunk_size=1):
