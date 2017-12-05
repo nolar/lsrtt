@@ -6,15 +6,12 @@ import dill
 import numpy
 
 
-def predict_db(db, model_path, predict_chunk_size=1):
+def predict_db(db, model, predict_chunk_size=1):
     """ Execute the prediction on the customers and remember the results. """
 
     # FIXME: Workaround for buggy dill/dill-objects: requires the code dependencies in the main module, not locally.
     import __main__ as _main_module  # noqa
     _main_module.numpy = numpy
-
-    with open(model_path, 'rb') as model_file:
-        model = dill.load(model_file)
 
     # Retrieve all the customers for prediction. Should be done daily, as the predictions can change.
     c = db.cursor()

@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 import click
+import dill
 from flask import current_app
 
 from ._defaults import (
@@ -62,8 +63,8 @@ def dump(db_path, dump_chunk_size, filename):
 @click.option('--now', default=DEFAULT_NOW)
 @click.option('--predict/--no-predict', default=False)
 @click.option('--predict-chunk-size', default=DEFAULT_PREDICT_CHUNK_SIZE)
-@click.option('--model', default=DEFAULT_MODEL_PATH)
-def refresh(db_path, now, predict, predict_chunk_size, model):
+@click.option('--model', 'model_path', default=DEFAULT_MODEL_PATH)
+def refresh(db_path, now, predict, predict_chunk_size, model_path):
     """
     Refresh the calculated fields that depend on the current date.
 
@@ -76,16 +77,18 @@ def refresh(db_path, now, predict, predict_chunk_size, model):
     with connect_db(db_path) as db:
         refresh_db(db, now)
         if predict:
+            with open(model_path, 'rb') as model_file:
+                model = dill.load(model_file)
             predict_db(db, model, predict_chunk_size=predict_chunk_size)
 
 
 @lsrtt.command()
 @click.option('--db-path', default=DEFAULT_DB_PATH)
 @click.option('--predict-chunk-size', default=DEFAULT_PREDICT_CHUNK_SIZE)
-@click.option('--model', default=DEFAULT_MODEL_PATH)
+@click.option('--model', 'model_path', default=DEFAULT_MODEL_PATH)
 @click.option('--refresh/--no-refresh', default=False)
 @click.option('--now', default=DEFAULT_NOW)
-def predict(db_path, model, predict_chunk_size, refresh, now):
+def predict(db_path, model_path, predict_chunk_size, refresh, now):
     """
     Calculate the predicted CLV.
 
@@ -98,6 +101,8 @@ def predict(db_path, model, predict_chunk_size, refresh, now):
     with connect_db(db_path) as db:
         if refresh:
             refresh_db(db, now)
+        with open(model_path, 'rb') as model_file:
+            model = dill.load(model_file)
         predict_db(db, model, predict_chunk_size=predict_chunk_size)
 
 
